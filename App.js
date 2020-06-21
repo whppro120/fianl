@@ -1,15 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React, { Component } from 'react';
-import { View, Text, Button, Modal, ViewPagerAndroid, Slider ,Animated,StyleSheet,Image, ImageBackground,Easing,FlatList,TouchableOpacity} from 'react-native';
+import { View, Text, Button, Modal, ViewPagerAndroid, Slider ,Animated,StyleSheet,Image, ImageBackground,Easing} from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer, DrawerActions,StackNavigator } from '@react-navigation/native';
+import { NavigationContainer, DrawerActions } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import ViewPager from '@react-native-community/viewpager';
@@ -17,8 +9,6 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { withSafeAreaInsets } from 'react-native-safe-area-context';
-
 
 
 
@@ -32,12 +22,15 @@ var p = 0
 export default class App extends Component {
   constructor(props) {
     super(props);
+   
+    
     this.state = {
-      visible:true,
+      visible:false,
     };
   }
 
 
+  
 
   hide = ()=>{
     this.setState({visible:false})
@@ -51,25 +44,17 @@ export default class App extends Component {
         <Modal visible={this.state.visible}>
           <ViewPager style={{flex:1}} initialPage={0}>
             <View key="1">
-            <ImageBackground style={{flex:1}}
-              source={{uri: 'http://123.56.28.23/photo/10.jpg'}}>
-         
-         
-            </ImageBackground>
+              <Text>page1</Text>
             </View>
             <View key="2">
-            <ImageBackground style={{flex:1}}
-              source={{uri: 'http://123.56.28.23/photo/11.jpg'}}>
-              
-         
-            </ImageBackground>
-            <Text style={{backgroundColor:'black',color:'white',textAlign:'center',fontSize:25}} onPress={this.hide}>退出</Text>
+              <Text>page2</Text>
+              <Button title="退出" onPress={this.hide}/>
             </View>
           </ViewPager>
         </Modal>
         <Drawer.Navigator>
-          <Drawer.Screen name = "主页" component = {Main}></Drawer.Screen>
-          <Drawer.Screen name = "成员" component = {Setting}></Drawer.Screen>
+          <Drawer.Screen name = "Main" component = {Main}></Drawer.Screen>
+          <Drawer.Screen name = "Setting" component = {Setting}></Drawer.Screen>
         </Drawer.Navigator>
       </NavigationContainer>
     );
@@ -92,6 +77,7 @@ class Main extends React.Component{
           iconName = focused ? 'ios-heart-dislike':'ios-heart-empty'
         }
 
+        // You can return any component that you like here!
         return <Ionicons name={iconName} size={size} color={color} />;
       },
     })}
@@ -110,19 +96,9 @@ class Main extends React.Component{
 class Setting extends React.Component{
   render(){
      return(
-      <View>
-        <Text style={{fontSize:40,textAlign:'center',marginTop:50}}>
-       
-       四大天王
-       </Text>
-        <View><Image style={{marginTop:30, width:400,height:250}} source={{uri:'http://123.56.28.23/photo/7.jpg'}}/></View>
-        <Text style={{fontSize:20,marginTop:15}}>
-       
-        崔云瑞          王小阳          马丹阳          王浩鹏
-        </Text>
-  
-      </View>
-      
+      <Text>
+      Setting
+    </Text>
 
      )  
    
@@ -132,9 +108,9 @@ class Home extends React.Component{
   render(){
      return(
         <ImageBackground style={{flex:1}}
-        source={{uri: 'http://123.56.28.23/photo/6.jpg'}}>
-         
-         <MusicPage></MusicPage>
+        source={{uri: 'http://123.56.28.23/photo/11862.jpg'}}>
+         <DV></DV>
+          <MusicPage></MusicPage>
         </ImageBackground>
           
       
@@ -148,28 +124,55 @@ class Home extends React.Component{
 
 class List extends React.Component{
   render(){
-     return<Stack.Navigator>
-     <Stack.Screen name="Flat" component={Flat}/> 
-     <Stack.Screen name="ListDetails" component={ListDetail}/> 
+     return(
+      <Stack.Navigator>
+      <Stack.Screen name="ItemList" component={ItemList}/>
+      <Stack.Screen name="ItemDetail" component={ItemDetail}/>
+    </Stack.Navigator>
 
-     </Stack.Navigator> 
+     )  
    
   }
 }
 class FAQ extends React.Component{
   render(){
      return(
-      <ImageBackground style={{flex:1,width:400,height:700}}
-        source={{uri: 'http://123.56.28.23/photo/9.jpg'}}>
-        <Text style={{fontSize:30,textAlign:'center',marginTop:50}}>要什么FAQ用就完事了</Text> 
-         
-     </ImageBackground>
+      <Text>
+      FAQ
+    </Text>
 
      )  
    
   }
 }
 
+class ItemList extends React.Component{
+  showDetail = () =>{
+    this.props.navigation.navigate("ItemDetail")
+  }
+  render(){
+     return(
+      <View>
+        <Text>ItemList</Text>
+        <Button title="查看详情" onPress={this.showDetail} />
+      </View>
+
+     )  
+   
+  }
+}
+
+class ItemDetail extends React.Component{
+  render(){
+     return(
+      <Text>
+      FAQ
+    </Text>
+
+     )  
+   
+  }
+}
 
 class MusicPage extends React.Component{
   constructor(props){
@@ -180,15 +183,9 @@ class MusicPage extends React.Component{
       source:{uri:url+music[p]},
       w_time:0,
       current_time:0,
-      player:null,
-      bounceValue: new Animated.Value(1), 
-      rotateValue: new Animated.Value(0),
+      player:null
 
     }
-  }
-
-  componentDidMount(){
-    this.startAnimation()
   }
 
   playCtrl =()=>{
@@ -196,7 +193,6 @@ class MusicPage extends React.Component{
     this.setState({
       paused:!paused
     })
-    
   }
 
 
@@ -237,49 +233,12 @@ class MusicPage extends React.Component{
     })
   }
 
-  startAnimation() {
-    this.state.bounceValue.setValue(1);
-
-    this.state.rotateValue.setValue(0);
-    Animated.parallel([
-        
-        Animated.spring(this.state.bounceValue, {
-            toValue: 1,      
-            friction: 20,    
-        }),
-        Animated.timing(this.state.rotateValue, {
-            toValue: 1,  
-            duration: 15000,  
-            easing: Easing.out(Easing.linear),
-        }),
-        
-    ]).start(()=>this.startAnimation());
-}
-
   render(){
     return(
       
-      
      
+      
       <View style={{ flex:1, justifyContent:'flex-end'}}>
-        <View style={styles.container}>
-             
-             <Animated.Image source={{uri:'http://123.56.28.23/photo/4.jpg'}}
-                             style={{width:200,
-                             height: 200,borderRadius:100, 
-                             transform: [
-                             
-                             {scale: this.state.bounceValue},
-                             
-
-                             {rotateZ: this.state.rotateValue.interpolate({
-                             inputRange: [0,1],
-                             outputRange: ['0deg', '360deg'],
-                             })},
-                  ]}}>
-             </Animated.Image>
-
-     </View>
         <Video 
         ref={ref=>this.player=ref}
         source={this.state.source} paused={this.state.paused}
@@ -296,6 +255,7 @@ class MusicPage extends React.Component{
 
 
         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+        
         <FontAwesome name="step-backward" style={{marginLeft:10,} } size={40}  onPress={this.prev}/>
         <FontAwesome name="play" style={{marginLeft:10,} } size={40} onPress={this.playCtrl}/>
         <FontAwesome name="step-forward" style={{marginRight:10,} } size={40}  onPress={this.next}/>
@@ -306,153 +266,69 @@ class MusicPage extends React.Component{
 
   }
 }
-
-
-class Flat extends Component {
-
-
-
-  
-  
-  constructor(props){
-      super(props)
-      this.url="http://123.56.28.23:8080/singe/findAll"
-      this.max=4
-      this.state={data:[],albums:[]}
-     
-  }
-  
-
-  componentDidMount(){
-      fetch(this.url,{method:"GET"})
-      .then(resp=>resp.json())
-      .then(albums=>{
-          console.log(albums)
-          this.setState({albums:albums})
-      })
-  }
-
-  _del=id=>{
-      
-      fetch(this.url+"/"+id,{method:"DELETE"})
-      .then(resp=>resp.json())
-      .then(obj=>{
-          let data=this.state.albums.splice(0)
-          let index=data.findIndex(album=>album.id===id)
-          console.log(index,id)
-          data.splice(index,1)
-          this.setState({albums:data})
-      })
-
-     
-  }
-
-  
-  _renderItem=({item})=>{
-      return (
-        <TouchableOpacity
-        onPress={()=>this.showDetails(item.id,item.name,item.singer,item.img)}
-      >
-          <View style={{height:155,justifyContent:"space-between",flexWrap:"wrap",flexDirection:'row',alignItems:"center",marginTop:5}} >
-              <View><Image style={{width:150,height:150}} source={{uri:item.img}}/></View>
-              <View style={{height:10}}><Text style={{fontSize:20}}>{item.name}</Text></View>
-              <View  ><Button style={{width:100,height:100,textAlign:"center",textAlignVertical:'center'}} onPress={()=>this._del(item.id)} title="删除"/>
-              </View>
-              
-              
-          </View>
-          </TouchableOpacity>
-          
-      )
-  }
-  _ItemSeparatorComponent=()=>{
-      return <View style={{height:1,backgroundColor:"red"}}></View>
-  }
-
-  _refresh=()=>{
-      let d=Math.floor(Math.random()*100+100)
-      let data=this.state.data.splice(0)
-      data.unshift(d)
-      this.setState({data:data})
-  }
-  _reachEnd=()=>{
-      let data=this.state.data.splice(0)
-      data.push(++this.max)
-      this.setState({data:data})
-  }
-  showDetails =(id,name,singer,img)=>{
-    let params = {list_id:id,list_name:name,list_singer:singer,list_img:img}
-    this.props.navigation.navigate("ListDetails",params)
- 
-  }
-  
- 
-
-  render() {
-
-    
-      return (
-          
-        
-       <View>
-              <FlatList
-                  ListEmptyComponent={<Text>数据是空的</Text>}
-                  keyExtractor={({item,index})=>index}
-                  ItemSeparatorComponent={this._ItemSeparatorComponent}
-                  data={this.state.albums} 
-                  renderItem={this._renderItem}
-                  
-              />
-          </View>
-
-     
-          
-          
-            
-          
-
-          
-          
-      )
-  }
-}
-
-class ListDetail extends React.Component {
+class DV extends React.Component {
   constructor(props) {
-    super(props);
-    
+      super(props);
+      
+      this.state = {
+          bounceValue: new Animated.Value(1), 
 
-    this.state = {
-        
-    };
+          rotateValue: new Animated.Value(0),
+      };
   }
 
-  
+  componentDidMount() {
+      
+      this.startAnimation();
+  }
 
-  
+  startAnimation() {
+      this.state.bounceValue.setValue(1);
+
+      this.state.rotateValue.setValue(0);
+      Animated.parallel([
+          
+          Animated.spring(this.state.bounceValue, {
+              toValue: 1,      
+              friction: 20,    
+          }),
+          Animated.timing(this.state.rotateValue, {
+              toValue: 1,  
+              duration: 15000,  
+              easing: Easing.out(Easing.linear),
+          }),
+          
+      ]).start(()=>this.startAnimation());
+  }
+
   render() {
-    
-    return (
-        <View>
-          <View style={{alignItems:'center',marginTop:30}}><Image style={{width:200,height:200}} source={{uri:this.props.route.params.list_img}}/></View>
-          <View><Text style={{fontSize:30,textAlign:'center',marginTop:30}}>歌名：{this.props.route.params.list_name}</Text></View>
-          <View><Text style={{fontSize:30,textAlign:'center',marginTop:30}}>歌手：{this.props.route.params.list_singer}</Text></View>
-            
-        </View>
-    );
+      return (
+          <View style={styles.container}>
+             
+              <Animated.Image source={{uri:'http://123.56.28.23/photo/4.png'}}
+                              style={{width:150,
+                              height: 150,borderRadius:75, 
+                              transform: [
+                              
+                              {scale: this.state.bounceValue},
+                              
+
+                              {rotateZ: this.state.rotateValue.interpolate({
+                              inputRange: [0,1],
+                              outputRange: ['0deg', '360deg'],
+                              })},
+                   ]}}>
+              </Animated.Image>
+
+          </View>
+      );
   }
 }
-
-
-
 
 const styles = StyleSheet.create({
   container: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 100,
   }
 });
-
-
